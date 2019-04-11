@@ -1,32 +1,15 @@
-form {
+#gameBoard {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.square {
+  width: 100px;
+  height: 100px;
   border: 2px solid black;
-  background-color: #6c757d;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  margin-bottom:20px;
 }
 
-.disablePlayer {
-    opacity: 0.3;
+.square:hover {
+  box-shadow: 0px 0px 100px blue;
 }
-
-#player1 {
-  display: block;
-  float: left;
-}
-
-#player2 {
-  display: block;
-  float: right;
-}
-
-#vsimage {
-  display: block;
-
-}
-
-img {
-  width: 100%;
-  height:80%;
