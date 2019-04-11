@@ -1,0 +1,32 @@
+form {
+  border: 2px solid black;
+  background-color: #6c757d;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom:20px;
+}
+
+.disablePlayer {
+    opacity: 0.3;
+}
+
+#player1 {
+  display: block;
+  float: left;
+}
+
+#player2 {
+  display: block;
+  float: right;
+}
+
+#vsimage {
+  display: block;
+
+}
+
+img {
+  width: 100%;
+  height:80%;
