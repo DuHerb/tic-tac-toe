@@ -55,13 +55,44 @@ Board.prototype.buildBoard = function(){
   return boardArray;
 }
 
+Board.prototype.winCheck = function(){
+
+  var winners = ["012", "345", "678"];
+  this.squares.forEach(function(square){
+    if(square.isChecked && square.checkMark === "X"){
+      
+      console.log("forEach loop working");
+    }
+  });
+  // if (this.squares[0,1,2]){
+  //   console.log("this worked");
+  }
+  // 012
+  // 345
+  // 678
+  // 036
+  // 147
+  // 258
+  // 048
+  // 246
+
+
 function addEventListeners(){
-  $(".square").on("click", function(){
+  $(".square").on("click", function(event){
+    var squareId = event.target.id;
+    // console.log(squareId);
     if(game.players[0].isActive){
       $(this).text(game.players[0].mark);
+      board.squares[squareId].checkMark = game.players[0].mark;
+      board.squares[squareId].isChecked = true;
+      board.winCheck();
+      // console.log(board.squares[squareId]);
       game.switchPlayer();
     } else {
       $(this).text(game.players[1].mark);
+        board.squares[squareId].checkMark = game.players[1].mark;
+        board.squares[squareId].isChecked = true;
+        // console.log(board.squares[squareId]);
       game.switchPlayer();
     }
   });
@@ -71,6 +102,8 @@ var player1 = new Player("X");
 var player2 = new Player("O");
 var game = new Game();
 var board = new Board();
+board.squares = board.buildBoard();
+console.log(board.squares);
 game.addPlayer(player1, player2);
 game.players[0].isActive = true;
 
@@ -83,7 +116,7 @@ $(document).ready(function(){
   // var board = new Board();
   // game.addPlayer(player1, player2);
   // game.players[0].isActive = true;
-  console.log(board.buildBoard());
+  // console.log(board.buildBoard());
   console.log(game.players);
   addEventListeners();
 })
