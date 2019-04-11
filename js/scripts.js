@@ -1,117 +1,89 @@
-//Backend Logic for Player
-
-var player1, player2;
-
-function Player(diceScore, turnScore, totalScore, playerActive) {
-  this.diceScore = 0,
-  this.turnScore = 0,
-  this.totalScore = 0,
-  this.playerActive = playerActive
+function Player(mark) {
+  this.mark = mark,
+  this.isActive = false;
 }
 
-Player.prototype.rollDice = function() {
-  var diceRoll = Math.floor((Math.random() * 6) + 1);
-  if (diceRoll === 1) {
-    this.diceScore = 1;
-    this.turnScore = 0;
-    if (this.playerActive === player1.playerActive) {
-      player1.playerActive = false;
-      player2.playerActive = true;
-      $("#player1").toggleClass("disablePlayer");
-      $("#player2").toggleClass("disablePlayer");
-    } else if (this.playerActive === player2.playerActive) {
-        player1.playerActive = true;
-        player2.playerActive = false;
-        $("#player1").toggleClass("disablePlayer");
-        $("#player2").toggleClass("disablePlayer");
-      }
-    alert("You rolled a 1, you lose your points and your turn is over.");
+function Board() {
+  this.squares = [],
+  this.currentId = -1;
+}
+
+function Square(id, row, col) {
+  this.id = id,
+  this.row = row,
+  this.col = col,
+  this.isChecked = false,
+  this.checkMark = ""
+}
+
+Square.prototype.isChecked = function(){
+  return this.isChecked;
+}
+
+Square.prototype.getMark = function(){
+  return this.checkMark;
+}
+
+function Game() {
+  this.players = []
+}
+
+Game.prototype.switchPlayer = function(){
+  if(this.players[0].isActive){
+    this.players[0].isActive = false;
+    this.players[1].isActive = true;
   } else {
-      this.diceScore = diceRoll;
-      this.turnScore += diceRoll;
-    };
-};
-
-Player.prototype.hold = function() {
-  this.totalScore += this.turnScore;
-  this.turnScore = 0;
-  if (this.playerActive === player1.playerActive) {
-    player1.playerActive = false;
-    player2.playerActive = true;
-    $("#player1").toggleClass("disablePlayer");
-    $("#player2").toggleClass("disablePlayer");
-  } else if (this.playerActive === player2.playerActive) {
-      player1.playerActive = true;
-      player2.playerActive = false;
-      $("#player1").toggleClass("disablePlayer");
-      $("#player2").toggleClass("disablePlayer");
-    }
-
-  if (this.totalScore >=100) {
-    alert("You win! Click OK to start a new game.");
-    newGame();
+    this.players[0].isActive = true;
+    this.players[1].isActive = false;
   }
-};
+}
 
-function newGame () {
-  $('#player1').removeClass("disablePlayer");
-  $('#player2').addClass("disablePlayer");
-  var players = [player1, player2];
-  players.forEach(function (player) {
-    player.diceScore = 0;
-    player.turnScore = 0;
-    player.totalScore = 0;
-  })
-  var emptyFields = [$(".diceScore1"), $(".turnScore1"), $(".totalScore1"), $(".diceScore2"), $(".turnScore2"), $(".totalScore2")];
-  emptyFields.forEach(function (emptyField) {
-    emptyField.text(0);
-  })
-};
+Game.prototype.addPlayer = function(player1, player2){
+  this.players.push(player1);
+  this.players.push(player2);
+}
+Board.prototype.buildBoard = function(){
+  var boardArray = [];
+  for (i=1; i <= 3; i++){
+    for (j=1; j <= 3; j++){
+      var squareArray =[];
+      var id = this.currentId ++;
+      var newSquare = new Square(this.currentId, i, j)
+      boardArray.push(newSquare);
+    }
+  }
+  return boardArray;
+}
 
-// User Interface Logic
+function addEventListeners(){
+  $(".square").on("click", function(){
+    if(game.players[0].isActive){
+      $(this).text(game.players[0].mark);
+      game.switchPlayer();
+    } else {
+      $(this).text(game.players[1].mark);
+      game.switchPlayer();
+    }
+  });
+}
 
-$(document).ready(function () {
-  var gamer1, gamer2;
-  player1 = new Player(gamer1);
-  player2 = new Player(gamer2);
-  newGame();
-  $("#rollDice1").click(function (event) {
-    event.preventDefault();
-    player1.playerActive = true;
-    player2.playerActive = false;
-    player1.rollDice();
-    $(".diceScore1").text(player1.diceScore);
-    $(".turnScore1").text(player1.turnScore);
-  });
-  $("#rollDice2").click(function (event) {
-    event.preventDefault();
-    player1.playerActive = false;
-    player2.playerActive = true;
-    player2.rollDice();
-    $(".diceScore2").text(player2.diceScore);
-    $(".turnScore2").text(player2.turnScore);
-    $(".totalScore2").text(player2.totalScore);
-  });
-  $("#hold1").click(function (event) {
-    event.preventDefault();
-    player1.playerActive = false;
-    player2.playerActive = true;
-    player1.hold();
-    $(".totalScore1").text(player1.totalScore);
-    player1.diceScore = 0;
-    player1.turnScore = 0;
-    $(".diceScore1").text(player1.diceScore);
-    $(".turnScore1").text(player1.turnScore);
-  });
-  $("#hold2").click(function (event) {
-    event.preventDefault();
-    player1.playerActive = true;
-    player2.playerActive = false;
-    player2.hold();
-    $(".totalScore2").text(player2.totalScore);
-    player2.diceScore = 0;
-    player2.turnScore = 0;
-    $(".diceScore2").text(player2.diceScore);
-    $(".turnScore2").text(player2.turnScore);
-  });
-});
+var player1 = new Player("X");
+var player2 = new Player("O");
+var game = new Game();
+var board = new Board();
+game.addPlayer(player1, player2);
+game.players[0].isActive = true;
+
+//document.ready --------------------------------//
+$(document).ready(function(){
+
+  // var player1 = new Player("X");
+  // var player2 = new Player("O");
+  // var game = new Game();
+  // var board = new Board();
+  // game.addPlayer(player1, player2);
+  // game.players[0].isActive = true;
+  console.log(board.buildBoard());
+  console.log(game.players);
+  addEventListeners();
+})
